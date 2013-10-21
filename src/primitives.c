@@ -213,7 +213,7 @@ hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsign
     hw_int rv = lhs / rhs;
     return SCLAMP(rv, out_size);
 }
-hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, 
+hw_int _sat_unsigned_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, 
                             char* file, int line)
 {
     _check_u_warns(lhs, in_size, "LHS", file, line);
