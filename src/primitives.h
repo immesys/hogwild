@@ -25,26 +25,31 @@ typedef struct
 
 
 //These are used in the functions that are going to be ported. 
-void _check_s_warns(hw_int v, int size, char* valname, char* file, int line);
-void _check_u_warns(hw_int v, int size, char* valname, char* file, int line);
-hw_int _nonsat_signed_add(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _nonsat_unsigned_add(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _sat_signed_add(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _sat_unsigned_add(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _nonsat_signed_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _nonsat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _sat_signed_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _sat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line);
-hw_int _nonsat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, char* file, int line);
-hw_int _nonsat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, char* file, int line);
-hw_int _sat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, char* file, int line);
-hw_int _sat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, char* file, int line);
-hw_int _nonsat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, char* file, int line);
-hw_int _nonsat_unsigned_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, char* file, int line);
-hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, char* file, int line);
-hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, char* file, int line);
+void _check_s_warns(hw_int v, int size, const char* valname, const char* file, int line);
+void _check_u_warns(hw_int v, int size, const char* valname, const char* file, int line);
+int _check(int v, const char* msg, const char* file, int line);
+hw_int _nonsat_signed_add(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _nonsat_unsigned_add(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _sat_signed_add(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _sat_unsigned_add(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _nonsat_signed_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _nonsat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _sat_signed_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _sat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line);
+hw_int _nonsat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, const char* file, int line);
+hw_int _nonsat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, const char* file, int line);
+hw_int _sat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, const char* file, int line);
+hw_int _sat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, unsigned int postshift, unsigned int out_size, const char* file, int line);
+hw_int _nonsat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, const char* file, int line);
+hw_int _nonsat_unsigned_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, const char* file, int line);
+hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, const char* file, int line);
+hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, const char* file, int line);
+#define SMAX(sz) ((1<<((sz)-1))-1)
+#define SMIN(sz) (-(1<<((sz)-1)))
+#define UMAX(sz) (1<<((sz)))
 #define CHK_S_TYPE(val, sz) _check_s_warns((val), (sz), #sz, __FILE__, __LINE__)
 #define CHK_U_TYPE(val, sz) _check_u_warns((val), (sz), #sz, __FILE__, __LINE__)
+#define CHK(condition) _check((condition), #condition, __FILE__, __LINE__)
 #define P_ADD(lhs, rhs, size) _nonsat_signed_add((lhs), (rhs), (size), __FILE__, __LINE__)
 #define P_UADD(lhs, rhs, size) _nonsat_unsigned_add((lhs), (rhs), (size), __FILE__, __LINE__)
 #define P_SAT_ADD(lhs, rhs, size) _sat_signed_add((lhs), (rhs), (size), __FILE__, __LINE__)

@@ -5,7 +5,7 @@ AC_PREREQ([2.59])
 AC_INIT([hogwild], 0.1)
 
 # unique source file --- primitive safety check 
-AC_CONFIG_SRCDIR([src/primitives.c])
+AC_CONFIG_SRCDIR([src/primitives.cpp])
 
 # place to put some extra build scripts installed
 AC_CONFIG_AUX_DIR([build-aux])

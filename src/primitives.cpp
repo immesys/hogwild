@@ -10,12 +10,10 @@
 
 unsigned int primitive_type_check_violations = 0;
 
-#define SMAX(sz) ((1<<((sz)-1))-1)
-#define SMIN(sz) (-(1<<((sz)-1)))
-#define UMAX(sz) (1<<((sz)))
+
 #define SCLAMP(v,sz) ( ((v)<SMIN((sz))) ? SMIN((sz)) : ((v)>SMAX((sz))) ? SMAX((sz)) : (v) )
 #define UCLAMP(v,sz) ( ((v)<0) ? 0 : ((v)>UMAX((sz))) ? UMAX((sz)) : (v) )
-void _check_s_warns(hw_int v, int size, char* valname, char* file, int line)
+void _check_s_warns(hw_int v, int size, const char* valname, const char* file, int line)
 {
     hw_int min = SMIN(size);
     hw_int max = SMAX(size);
@@ -33,7 +31,7 @@ void _check_s_warns(hw_int v, int size, char* valname, char* file, int line)
             valname, size, v, min, file, line);
     }
 }
-void _check_u_warns(hw_int v, int size, char* valname, char* file, int line)
+void _check_u_warns(hw_int v, int size, const char* valname, const char* file, int line)
 {
     hw_int min = 0;
     hw_int max = UMAX(size);
@@ -50,19 +48,19 @@ void _check_u_warns(hw_int v, int size, char* valname, char* file, int line)
             valname, size, v, min, file, line);
     }
 }
-int _check(int v, char* msg, char* file, int line)
+int _check(int v, const char* msg, const char* file, int line)
 {
     if (!v)
     {
         primitive_type_check_violations++;
-        fprintf(stderr, "[W] SANITY FAILURE: %s @ %s:%d\n", msg, file, line);
+        fprintf(stderr, "[W] SANITY FAILURE CHECKING: %s @ %s:%d\n", msg, file, line);
     }
     return v;
 }
 
 // ADDITION
 /////////////
-hw_int _nonsat_signed_add(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _nonsat_signed_add(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs + rhs;
     _check_s_warns(lhs, size, "LHS", file, line);
@@ -70,7 +68,7 @@ hw_int _nonsat_signed_add(hw_int lhs, hw_int rhs, int size, char* file, int line
     _check_s_warns(rv, size, "NONSAT SIGNED ADD RV", file, line);
     return rv;
 }
-hw_int _nonsat_unsigned_add(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _nonsat_unsigned_add(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs + rhs;
     _check_u_warns(lhs, size, "LHS", file, line);
@@ -78,14 +76,14 @@ hw_int _nonsat_unsigned_add(hw_int lhs, hw_int rhs, int size, char* file, int li
     _check_u_warns(rv, size, "NONSAT SIGNED ADD RV", file, line);
     return rv;
 }
-hw_int _sat_signed_add(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _sat_signed_add(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs + rhs;
     _check_s_warns(lhs, size, "LHS", file, line);
     _check_s_warns(rhs, size, "RHS", file, line); 
     return SCLAMP(rv,size);
 }
-hw_int _sat_unsigned_add(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _sat_unsigned_add(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs + rhs;
     _check_u_warns(lhs, size, "LHS", file, line);
@@ -95,7 +93,7 @@ hw_int _sat_unsigned_add(hw_int lhs, hw_int rhs, int size, char* file, int line)
 
 // SUBTRACTION
 ////////////////
-hw_int _nonsat_signed_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _nonsat_signed_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs - rhs;
     _check_s_warns(lhs, size, "LHS", file, line);
@@ -103,7 +101,7 @@ hw_int _nonsat_signed_subtract(hw_int lhs, hw_int rhs, int size, char* file, int
     _check_s_warns(rv, size, "NONSAT SIGNED SUB RV", file, line);
     return rv;
 }
-hw_int _nonsat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _nonsat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs - rhs;
     _check_u_warns(lhs, size, "LHS", file, line);
@@ -111,14 +109,14 @@ hw_int _nonsat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, char* file, i
     _check_u_warns(rv, size, "NONSAT SIGNED SUB RV", file, line);
     return rv;
 }
-hw_int _sat_signed_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _sat_signed_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs - rhs;
     _check_s_warns(lhs, size, "LHS", file, line);
     _check_s_warns(rhs, size, "RHS", file, line); 
     return SCLAMP(rv,size);
 }
-hw_int _sat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, char* file, int line)
+hw_int _sat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, const char* file, int line)
 {
     hw_int rv = lhs - rhs;
     _check_u_warns(lhs, size, "LHS", file, line);
@@ -129,7 +127,7 @@ hw_int _sat_unsigned_subtract(hw_int lhs, hw_int rhs, int size, char* file, int 
 // MULTIPLICATION
 ///////////////////
 hw_int _nonsat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, 
-                               unsigned int postshift, unsigned int out_size, char* file, int line)
+                               unsigned int postshift, unsigned int out_size, const char* file, int line)
 {
     hw_int rv = lhs * rhs;
     _check_s_warns(lhs, in_size, "LHS", file, line);
@@ -142,7 +140,7 @@ hw_int _nonsat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, uns
     return rv;
 }
 hw_int _nonsat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, 
-                                 unsigned int postshift, unsigned int out_size, char* file, int line)
+                                 unsigned int postshift, unsigned int out_size, const char* file, int line)
 {
     hw_int rv = lhs * rhs;
     _check_u_warns(lhs, in_size, "LHS", file, line);
@@ -155,7 +153,7 @@ hw_int _nonsat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, u
     return rv;
 }
 hw_int _sat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, 
-                            unsigned int postshift, unsigned int out_size, char* file, int line)
+                            unsigned int postshift, unsigned int out_size, const char* file, int line)
 {
     hw_int rv = lhs * rhs;
     _check_s_warns(lhs, in_size, "LHS", file, line);
@@ -167,7 +165,7 @@ hw_int _sat_signed_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsign
     return SCLAMP(rv, out_size);
 }
 hw_int _sat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int comp_size, 
-                              unsigned int postshift, unsigned int out_size, char* file, int line)
+                              unsigned int postshift, unsigned int out_size, const char* file, int line)
 {
     hw_int rv = lhs * rhs;
     _check_u_warns(lhs, in_size, "LHS", file, line);
@@ -182,7 +180,7 @@ hw_int _sat_unsigned_multiply(hw_int lhs, hw_int rhs, unsigned int in_size, unsi
 // DIVISION
 /////////////
 hw_int _nonsat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, 
-                               char* file, int line)
+                               const char* file, int line)
 {
     _check_s_warns(lhs, in_size, "LHS", file, line);
     _check_s_warns(rhs, in_size, "RHS", file, line);
@@ -193,7 +191,7 @@ hw_int _nonsat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, uns
     return rv;
 }
 hw_int _nonsat_unsigned_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, 
-                                 char* file, int line)
+                                 const char* file, int line)
 {
     _check_u_warns(lhs, in_size, "LHS", file, line);
     _check_u_warns(rhs, in_size, "RHS", file, line);
@@ -204,7 +202,7 @@ hw_int _nonsat_unsigned_division(hw_int lhs, hw_int rhs, unsigned int in_size, u
     return rv;
 }
 hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, 
-                            char* file, int line)
+                            const char* file, int line)
 {
     _check_s_warns(lhs, in_size, "LHS", file, line);
     _check_s_warns(rhs, in_size, "RHS", file, line);
@@ -214,7 +212,7 @@ hw_int _sat_signed_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsign
     return SCLAMP(rv, out_size);
 }
 hw_int _sat_unsigned_division(hw_int lhs, hw_int rhs, unsigned int in_size, unsigned int out_size, 
-                            char* file, int line)
+                            const char* file, int line)
 {
     _check_u_warns(lhs, in_size, "LHS", file, line);
     _check_u_warns(rhs, in_size, "RHS", file, line);
